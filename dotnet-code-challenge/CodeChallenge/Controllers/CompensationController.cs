@@ -21,13 +21,16 @@ namespace CodeChallenge.Controllers
             _logger = logger;
             _compensationService = compensationService;
         }
-
+        [Route("")]
         [HttpPost]
-        public IActionResult CreateCompensation([FromBody] Compensation compensation)
+        public IActionResult CreateCompensation(Compensation compensation)
         {
+
             _logger.LogDebug($"'{ compensation.Employee.EmployeeId}'");
+            var emp = compensation.Employee;
+            compensation.CompensationId = Guid.NewGuid().ToString();
             _compensationService.Create(compensation);
-            return CreatedAtRoute("getCompensationById", new { id = compensation.Employee.EmployeeId }, compensation);
+            return CreatedAtRoute("getCompensationById", new { id = emp.EmployeeId }, compensation);
         }
 
         [HttpGet("{id}", Name = "getCompensationById")]
